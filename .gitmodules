@@ -1,0 +1,3 @@
+[submodule "websocket"]
+	path = websocket
+	url = https://github.com/paragi/PHP-websocket-client.git
