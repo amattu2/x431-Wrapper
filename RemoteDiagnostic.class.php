@@ -92,6 +92,13 @@ class RemoteDiagnostic {
   private $user;
 
   /**
+   * SocketConnection instance
+   *
+   * @var SocketConnection|null
+   */
+  private $socket;
+
+  /**
    * Class Constructor - Performs a login to x431 remote diagnostic
    * via the AIT|Golo365 account credentials provided
    *
@@ -145,6 +152,11 @@ class RemoteDiagnostic {
     // Check for valid serial number
     if (strlen($serial_no) !== self::SERIAL_NUMBER_LENGTH) {
       throw new Exception("Invalid serial number");
+    }
+
+    // Open Socket Connection
+    if (!($this->socket instanceof SocketConnection)) {
+      $this->socket = new SocketConnection($this->token, $this->user['user_id']);
     }
 
     throw new Exception("Not implemented");

@@ -23,19 +23,30 @@
 use amattu\x431\RemoteDiagnostic;
 
 require(dirname(__FILE__) . "/RemoteDiagnostic.class.php");
+require(dirname(__FILE__) . "/SocketConnection.class.php");
+require(dirname(__FILE__) . "/websocket/src/ClientInterface.php");
+require(dirname(__FILE__) . "/websocket/src/ConnectionException.php");
+require(dirname(__FILE__) . "/websocket/src/Client.php");
 
 $config = parse_ini_file(dirname(__FILE__) . "/config.ini");
 
+session_start();
+
 // Perform Login
 try {
-  $wrapper = new RemoteDiagnostic($config['USERNAME'], $config['PASSWORD']);
+  if (!($_SESSION['wrapper'] instanceof RemoteDiagnostic))
+    $_SESSION['wrapper'] = new RemoteDiagnostic($config['USERNAME'], $config['PASSWORD']);
+  else
+    echo "Session already exists with a wrapper.<br>";
 } catch (Exception $e) {
-  exit("Error: " . $e->getMessage());
+  echo "<h1>Error</h1><br/>";
+  echo $e->getMessage();
 }
 
 // Connect to Device
 try {
-  $wrapper->connect($config['SERIAL']);
+  $_SESSION['wrapper']->connect($config['SERIAL']);
 } catch (Exception $e) {
-  exit("Error: " . $e->getMessage());
+  echo "<h1>Error</h1><br/>";
+  echo $e->getMessage();
 }
